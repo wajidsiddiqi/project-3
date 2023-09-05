@@ -6,9 +6,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
+error KingKat__TokenNonexistent();
+
 contract KingKat is ERC1155, Ownable, ERC1155Supply {
     uint256 private constant TOKEN_A = 1;
     uint256 private s_mintState = 1;
+    uint256 private constant PRICE = 0.01 ether;
+    uint256 private constant MAX_SUPPLY = 15;
 
     constructor()
         ERC1155("ipfs://Qmaa6TuP2s9pSKczHF4rwWhTKUdygrrDs8RmYYqCjP3Hye/")
@@ -26,7 +30,9 @@ contract KingKat is ERC1155, Ownable, ERC1155Supply {
     function uri(
         uint256 id
     ) public view virtual override returns (string memory) {
-        require(exists(id), "Token nonexistent");
+        if (!exists(id)) {
+            revert KingKat__TokenNonexistent();
+        }
 
         return
             string(
@@ -59,6 +65,14 @@ contract KingKat is ERC1155, Ownable, ERC1155Supply {
     //*Getter Functions
     function getTokenAId() public pure returns (uint256) {
         return TOKEN_A;
+    }
+
+    function getPrice() public pure returns (uint256) {
+        return PRICE;
+    }
+
+    function getMaxSupply() public pure returns (uint256) {
+        return MAX_SUPPLY;
     }
 
     function getMintState() public view returns (bool) {
