@@ -1,0 +1,19 @@
+{
+  "name": "King Kat",
+  "description": "This is my portfolio nft project erc1155",
+  "image": "ipfs://bafkreibpymh57em6z6xfdaetbfx5mlblldpyojgdzmxjjjdltgapup3rna",
+  "attributes": [
+    {
+      "trait_type": "Language",
+      "value": "Solidity"
+    },
+    {
+      "trait_type": "Stack",
+      "value": "Hardhat, Nextjs"
+    },
+    {
+      "trait_type": "Erc",
+      "value": "1155"
+    }
+  ]
+}
