@@ -5,13 +5,13 @@ const { assert, expect } = require("chai");
 !developmentChains.includes(network.name)
   ? describe.skip
   : describe("king Kat Nft Unit Tests", function () {
-      let kingKat, deployer;
+      let kingKat, deployer, kingKatDeployed;
 
       beforeEach(async () => {
         accounts = await ethers.getSigners();
         deployer = accounts[0];
         await deployments.fixture(["kingKat"]);
-        const kingKatDeployed = await deployments.get("KingKat");
+        kingKatDeployed = await deployments.get("KingKat");
         kingKat = await ethers.getContractAt(
           "KingKat",
           kingKatDeployed.address
@@ -50,273 +50,130 @@ const { assert, expect } = require("chai");
           ).to.be.revertedWith("Ownable: caller is not the owner");
         });
       });
-      /*
-      describe("NFT Reveal", () => {
-        it("changes nft reveal", async () => {
-          const txResponse = await roboPunksNft.isRevealed(true);
-          await txResponse.wait(1);
-          const revealState = await roboPunksNft.getRevealState();
 
-          assert.equal(revealState, true);
-        });
-
-        it("reverts when non owner changes nft reveal", async () => {
-          const accounts = await ethers.getSigners();
-          const nonowner = accounts[1];
-
-          await expect(
-            roboPunksNft.connect(nonowner).isRevealed(true)
-          ).to.be.revertedWith("Ownable: caller is not the owner");
-        });
-      });
-
-      describe("Set WL", () => {
-        it("sets WL addresses", async () => {
-          const txResponse = await roboPunksNft.setWhitelist([
-            deployer.address,
-          ]);
-          await txResponse.wait(1);
-          const whiteListed = await roboPunksNft.checkWhitelist(
-            deployer.address
-          );
-
-          assert.equal(whiteListed, true);
-        });
-
-        it("reverts when non owner sets WL addresses", async () => {
-          const accounts = await ethers.getSigners();
-          const nonowner = accounts[1];
-
-          await expect(
-            roboPunksNft.connect(nonowner).setWhitelist([deployer.address])
-          ).to.be.revertedWith("Ownable: caller is not the owner");
-        });
-      });
-
-      describe("WL Mint", () => {
-        let quantity, value;
+      describe("Mint", () => {
+        let quantity, value, id;
 
         beforeEach(async () => {
-          const price = await roboPunksNft.getWhitelistMintPrice();
+          const price = await kingKat.getPrice();
           quantity = 1;
-          value = price.mul(quantity);
+          value = BigInt(price.toString()) * BigInt(quantity);
+          id = await kingKat.getTokenAId();
         });
 
-        it("reverts if WL is not open", async () => {
+        it("reverts if mint is not open", async () => {
           await expect(
-            roboPunksNft.whitelistMint(quantity, { value: value })
-          ).to.be.revertedWith("WL mint not enabled");
-        });
-
-        it("reverts if not whitelisted", async () => {
-          const txResponse = await roboPunksNft.changeNftMintState(false, true);
-          await txResponse.wait(1);
-
-          await expect(
-            roboPunksNft.whitelistMint(quantity, { value: value })
-          ).to.be.revertedWith("not whitelisted");
+            kingKat.mint(id, quantity, { value: value })
+          ).to.be.revertedWithCustomError(kingKat, "KingKat__MintNotEnabled");
         });
 
         it("reverts if wrong mint value added", async () => {
-          const txResponse1 = await roboPunksNft.changeNftMintState(
-            false,
-            true
-          );
-          await txResponse1.wait(1);
-          const txResponse2 = await roboPunksNft.setWhitelist([
-            deployer.address,
-          ]);
-          await txResponse2.wait(1);
-
-          await expect(
-            roboPunksNft.whitelistMint(2, { value: value })
-          ).to.be.revertedWith("wrong mint value");
-        });
-
-        it("allows whitelist users to mint nft", async () => {
-          const txResponse1 = await roboPunksNft.changeNftMintState(
-            false,
-            true
-          );
-          await txResponse1.wait(1);
-          const txResponse2 = await roboPunksNft.setWhitelist([
-            deployer.address,
-          ]);
-          await txResponse2.wait(1);
-          const txResponse3 = await roboPunksNft.whitelistMint(quantity, {
-            value: value,
-          });
-          await txResponse3.wait(1);
-          const userAddress = deployer.address;
-          const userBalance = await roboPunksNft.balanceOf(userAddress);
-          const owner = await roboPunksNft.ownerOf(1);
-
-          assert.equal(userBalance, 1);
-          assert.equal(owner, userAddress);
-        });
-      });
-
-      describe("Public Mint", () => {
-        let quantity, value;
-
-        beforeEach(async () => {
-          const price = await roboPunksNft.getPublicMintPrice();
-          quantity = 1;
-          value = price.mul(quantity);
-        });
-
-        it("reverts if public mint is not open", async () => {
-          await expect(
-            roboPunksNft.publicMint(quantity, { value: value })
-          ).to.be.revertedWith("public mint not enabled");
-        });
-
-        it("reverts if wrong mint value added", async () => {
-          const txResponse = await roboPunksNft.changeNftMintState(true, false);
+          const txResponse = await kingKat.changeMintState();
           await txResponse.wait(1);
 
           await expect(
-            roboPunksNft.publicMint(2, { value: value })
-          ).to.be.revertedWith("wrong mint value");
-        });
-
-        it("allows public users to mint nft", async () => {
-          const txResponse1 = await roboPunksNft.changeNftMintState(
-            true,
-            false
+            kingKat.mint(id, 2, { value: value })
+          ).to.be.revertedWithCustomError(
+            kingKat,
+            "KingKat__NotEnoughMoneySent"
           );
-          await txResponse1.wait(1);
-          const txResponse2 = await roboPunksNft.publicMint(quantity, {
-            value: value,
-          });
-          await txResponse2.wait(1);
-          const userAddress = deployer.address;
-          const userBalance = await roboPunksNft.balanceOf(userAddress);
-          const owner = await roboPunksNft.ownerOf(1);
-
-          assert.equal(userBalance, 1);
-          assert.equal(owner, userAddress);
-        });
-      });
-
-      describe("Internal Mint", () => {
-        let quantity, value;
-
-        beforeEach(async () => {
-          const price = await roboPunksNft.getPublicMintPrice();
-          quantity = 1;
-          value = price.mul(quantity);
-          const txResponse = await roboPunksNft.changeNftMintState(true, false);
-          await txResponse.wait(1);
         });
 
         it("reverts if we sold out", async () => {
+          const txResponse = await kingKat.changeMintState();
+          await txResponse.wait(1);
+
           const accounts = await ethers.getSigners();
-          const maxSupply = await roboPunksNft.getMaxSupply();
+          const maxSupply = await kingKat.getMaxSupply();
 
           for (let i = 0; i < maxSupply; i++) {
-            const mintAccount = accounts[i];
-            const txResponse = await roboPunksNft
-              .connect(mintAccount)
-              .publicMint(quantity, {
+            const mintAccounts = accounts[i];
+            const txResponse = await kingKat
+              .connect(mintAccounts)
+              .mint(id, quantity, {
                 value: value,
               });
             await txResponse.wait(1);
           }
 
           await expect(
-            roboPunksNft.publicMint(quantity, { value: value })
-          ).to.be.revertedWith("we sold out");
+            kingKat.mint(id, quantity, { value: value })
+          ).to.be.revertedWithCustomError(kingKat, "KingKat__WeSoldOut");
         });
 
-        it("reverts if exceed's max wallet limit", async () => {
-          for (let i = 0; i < 2; i++) {
-            const txResponse = await roboPunksNft.publicMint(quantity, {
-              value: value,
-            });
-            await txResponse.wait(1);
-          }
+        it("reverts if wrong token id added", async () => {
+          const txResponse = await kingKat.changeMintState();
+          await txResponse.wait(1);
 
           await expect(
-            roboPunksNft.publicMint(quantity, { value: value })
-          ).to.be.revertedWith("exceeded max wallet limit");
+            kingKat.mint(2, quantity, { value: value })
+          ).to.be.revertedWithCustomError(kingKat, "KingKat__WrongId");
         });
 
         it("mints nft and updates accordingly", async () => {
-          const txResponse = await roboPunksNft.publicMint(quantity, {
+          const txResponse1 = await kingKat.changeMintState();
+          await txResponse1.wait(1);
+          const txResponse = await kingKat.mint(id, quantity, {
             value: value,
           });
           await txResponse.wait(1);
-          const totalSupply = await roboPunksNft.getTotalSupply();
-          const walletMints = await roboPunksNft.getYourWalletMints(
-            deployer.address
-          );
+          const totalSupply = await kingKat.totalSupply(id);
           const userAddress = deployer.address;
-          const userBalance = await roboPunksNft.balanceOf(userAddress);
-          const owner = await roboPunksNft.ownerOf(1);
+          const userBalance = await kingKat.balanceOf(userAddress, id);
 
           assert.equal(totalSupply, 1);
-          assert.equal(walletMints, 1);
           assert.equal(userBalance, 1);
-          assert.equal(owner, userAddress);
         });
       });
 
       describe("Token URI", () => {
-        let quantity, value;
+        let quantity, value, id;
 
         beforeEach(async () => {
-          const price = await roboPunksNft.getPublicMintPrice();
+          const price = await kingKat.getPrice();
           quantity = 1;
-          value = price.mul(quantity);
-          const txResponse1 = await roboPunksNft.changeNftMintState(
-            true,
-            false
+          value = BigInt(price.toString()) * BigInt(quantity);
+          id = await kingKat.getTokenAId();
+          const txResponse = await kingKat.changeMintState();
+          await txResponse.wait(1);
+        });
+
+        it("reverts if id don't exist", async () => {
+          await expect(kingKat.uri(id)).to.be.revertedWithCustomError(
+            kingKat,
+            "KingKat__TokenNonexistent"
           );
-          await txResponse1.wait(1);
-          const txResponse2 = await roboPunksNft.publicMint(quantity, {
+        });
+
+        it("returns uri", async () => {
+          const txResponse = await kingKat.mint(id, quantity, {
             value: value,
           });
-          await txResponse2.wait(1);
-        });
-
-        it("returns base uri if reveal is off", async () => {
-          const baseURI = await roboPunksNft.tokenURI(1);
-
-          assert.equal(
-            baseURI.toString(),
-            "ipfs://bafybeidlnjv7bbart3azzizjh76ywpvtns67nz3c2pdu5xvytdrtwbeopu/"
-          );
-        });
-
-        it("returns token uri", async () => {
-          const txResponse = await roboPunksNft.isRevealed(true);
           await txResponse.wait(1);
-          const tokenURI = await roboPunksNft.tokenURI(1);
+          const uri = await kingKat.uri(id);
 
           assert.equal(
-            tokenURI.toString(),
-            "ipfs://bafybeidlnjv7bbart3azzizjh76ywpvtns67nz3c2pdu5xvytdrtwbeopu/1.json"
+            uri.toString(),
+            "ipfs://bafkreiccfopvgkp6yb44f62oh5tlbrf5bvpqvn2x2sbjnmvv4rni57eitq"
           );
         });
       });
 
       describe("Withdraw", () => {
-        let quantity, value;
+        let quantity, value, id;
 
         beforeEach(async () => {
-          const price = await roboPunksNft.getPublicMintPrice();
+          const price = await kingKat.getPrice();
           quantity = 1;
-          value = price.mul(quantity);
-          const txResponse1 = await roboPunksNft.changeNftMintState(
-            true,
-            false
-          );
-          await txResponse1.wait(1);
+          value = BigInt(price.toString()) * BigInt(quantity);
+          id = await kingKat.getTokenAId();
+          const txResponse = await kingKat.changeMintState();
+          await txResponse.wait(1);
+
           const accounts = await ethers.getSigners();
-          const txResponse2 = await roboPunksNft
+          const txResponse2 = await kingKat
             .connect(accounts[1])
-            .publicMint(quantity, {
+            .mint(id, quantity, {
               value: value,
             });
           await txResponse2.wait(1);
@@ -326,23 +183,24 @@ const { assert, expect } = require("chai");
           const accounts = await ethers.getSigners();
           const nonowner = accounts[2];
 
-          await expect(
-            roboPunksNft.connect(nonowner).withdraw()
-          ).to.be.revertedWith("Ownable: caller is not the owner");
+          await expect(kingKat.connect(nonowner).withdraw()).to.be.revertedWith(
+            "Ownable: caller is not the owner"
+          );
         });
 
         it("successfully withdraws", async () => {
           const initialBalance = await ethers.provider.getBalance(
-            roboPunksNft.address
+            kingKatDeployed.address
           );
           const initialOwnerBalance = await ethers.provider.getBalance(
             deployer.address
           );
-          const tx = await roboPunksNft.withdraw();
+          const tx = await kingKat.withdraw();
           const receipt = await tx.wait();
-          const gasCost = receipt.gasUsed.mul(tx.gasPrice);
+
+          const gasCost = receipt.gasUsed * tx.gasPrice;
           const finalBalance = await ethers.provider.getBalance(
-            roboPunksNft.address
+            kingKatDeployed.address
           );
           const finalOwnerBalance = await ethers.provider.getBalance(
             deployer.address
@@ -351,8 +209,8 @@ const { assert, expect } = require("chai");
           assert.equal(finalBalance.toString(), "0");
           assert.equal(
             finalOwnerBalance.toString(),
-            initialOwnerBalance.sub(gasCost).add(initialBalance).toString()
+            (initialOwnerBalance - gasCost + BigInt(initialBalance)).toString()
           );
         });
-      });*/
+      });
     });
