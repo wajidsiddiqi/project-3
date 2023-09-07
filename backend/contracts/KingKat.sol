@@ -30,7 +30,7 @@ contract KingKat is ERC1155, Ownable, ERC1155Supply {
 
 	function mint(uint256 id, uint256 quantity) public payable {
 		if (s_mintState == 1) revert KingKat__MintNotEnabled();
-		if (id > TOKEN_A) revert KingKat__WrongId();
+		if (id != TOKEN_A) revert KingKat__WrongId();
 		if (msg.value != PRICE * quantity) revert KingKat__NotEnoughMoneySent();
 		if (totalSupply(id) + quantity > MAX_SUPPLY)
 			revert KingKat__WeSoldOut();
