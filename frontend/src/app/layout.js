@@ -1,5 +1,5 @@
 import { Providers } from "./providers";
-import "./styles/global.css";
+import { sora } from "./fonts";
 
 export const metadata = {
   title: "King Kat",
@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={sora.className}>
       <body>
         <Providers>{children}</Providers>
       </body>
