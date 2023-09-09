@@ -6,6 +6,9 @@
 
 body {
   background-color: #18160f;
+  background-image: url(/assets/bgs/grain.png);
+  background-position: 0 0;
+  background-size: 300px 300px;
 }
 
 img {
