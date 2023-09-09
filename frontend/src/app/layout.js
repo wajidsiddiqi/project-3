@@ -1,5 +1,6 @@
 import { Providers } from "./providers";
 import { sora } from "./fonts";
+import "@/app/styles/global.css";
 
 export const metadata = {
   title: "King Kat",
