@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 // import Footer from "./components/Footer";
 // import ScrollToTopButton from "./components/ScrollToTopButton";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 // import { ethers } from "ethers";
 import {
   usePrepareContractWrite,
@@ -59,7 +61,9 @@ export default function Home() {
             culpa eligendi ut voluptas molestiae et natus mollitia ex fugiat
             dolore eum magni necessitatibus.
           </ParaBig>
-          <StyledButton>View on Etherscan</StyledButton>
+          <Link href="https://sepolia.etherscan.io/address/0xf9532EaFB5Cf0B97922E10647f9a9b3E79089efd">
+            <StyledButton>View on Etherscan</StyledButton>
+          </Link>
         </LeftSide>
         <RightSide>
           <Box>
@@ -134,6 +138,7 @@ export default function Home() {
           </Box>
         </RightSide>
       </Container>
+      <Footer />
     </React.Fragment>
   );
 }
