@@ -74,6 +74,7 @@ export default function Header() {
                     <NextLink
                       href="http://opensea.com"
                       onClick={handleMenuClose}
+                      target="_blank"
                     >
                       <Image
                         src="/assets/icons/opensea.svg"
@@ -87,6 +88,7 @@ export default function Header() {
                     <NextLink
                       href="http://discord.com"
                       onClick={handleMenuClose}
+                      target="_blank"
                     >
                       <Image
                         src="/assets/icons/discord.svg"
@@ -100,6 +102,7 @@ export default function Header() {
                     <NextLink
                       href="https://twitter.com/abdulwajidsid"
                       onClick={handleMenuClose}
+                      target="_blank"
                     >
                       <Image
                         src="/assets/icons/twitter.svg"
@@ -116,7 +119,7 @@ export default function Header() {
             {/* Menue */}
             {!isMobile && (
               <React.Fragment>
-                <NextLink href="http://opensea.com">
+                <NextLink href="http://opensea.com" target="_blank">
                   <Image
                     src="/assets/icons/opensea.svg"
                     width="36"
@@ -125,7 +128,7 @@ export default function Header() {
                   />
                 </NextLink>
 
-                <NextLink href="http://discord.com">
+                <NextLink href="http://discord.com" target="_blank">
                   <Image
                     src="/assets/icons/discord.svg"
                     width="36"
@@ -134,7 +137,10 @@ export default function Header() {
                   />
                 </NextLink>
 
-                <NextLink href="http://twitter.com">
+                <NextLink
+                  href="https://twitter.com/abdulwajidsid"
+                  target="_blank"
+                >
                   <Image
                     src="/assets/icons/twitter.svg"
                     width="36"
