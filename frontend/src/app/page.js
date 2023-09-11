@@ -2,25 +2,15 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-// import Footer from "./components/Footer";
-// import ScrollToTopButton from "./components/ScrollToTopButton";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-// import { ethers } from "ethers";
+// import ScrollToTopButton from "./components/ScrollToTopButton";
 import {
-  usePrepareContractWrite,
-  useContractWrite,
-  useWaitForTransaction,
-  useAccount,
-} from "wagmi";
-import {
-  MainPageWrapper,
   MainH1Title,
   ParaBig,
   ParaMid,
   ParaSm,
   StyledButton,
-  TextWrapper,
   ImageContainer,
   ImageStyle,
   Center,
@@ -67,13 +57,15 @@ export default function Home() {
         </LeftSide>
         <RightSide>
           <Box>
-            <Image
-              src="/assets/nfts/1.jpg"
-              alt="NFT"
-              style={ImageStyle}
-              width="350"
-              height="350"
-            />
+            <ImageContainer>
+              <Image
+                src="/assets/nfts/1.jpg"
+                alt="NFT"
+                style={ImageStyle}
+                width="350"
+                height="350"
+              />
+            </ImageContainer>
             <BoxContainer>
               <ChildContainer style={{ alignItems: "flex-start" }}>
                 <Center>
