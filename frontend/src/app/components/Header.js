@@ -98,7 +98,7 @@ export default function Header() {
                   </NavLinkForIcon>
                   <NavLinkForIcon>
                     <NextLink
-                      href="http://twitter.com"
+                      href="https://twitter.com/abdulwajidsid"
                       onClick={handleMenuClose}
                     >
                       <Image
