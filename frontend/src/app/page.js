@@ -1,13 +1,22 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Footer from "./components/Footer";
-import ScrollToTopButton from "./components/ScrollToTopButton";
+// import Footer from "./components/Footer";
+// import ScrollToTopButton from "./components/ScrollToTopButton";
 import Header from "./components/Header";
+// import { ethers } from "ethers";
+import {
+  usePrepareContractWrite,
+  useContractWrite,
+  useWaitForTransaction,
+  useAccount,
+} from "wagmi";
 import {
   MainPageWrapper,
   MainH1Title,
   ParaBig,
+  ParaMid,
+  ParaSm,
   StyledButton,
   TextWrapper,
   ImageContainer,
@@ -17,6 +26,9 @@ import {
   RightSide,
   Container,
   Box,
+  ChildContainer,
+  NoAlignCenter,
+  Icon,
 } from "@/app/styles/styles.js";
 
 export default function Home() {
@@ -45,6 +57,35 @@ export default function Home() {
               height={0}
               layout="responsive"
             />
+            <NoAlignCenter>
+              <ChildContainer style={{ alignItems: "flex-start" }}>
+                <Center>
+                  <ParaSm>Total Minted</ParaSm>
+                </Center>
+                <Center>
+                  <ParaMid>0 / 15</ParaMid>
+                </Center>
+              </ChildContainer>
+
+              <ChildContainer style={{ alignItems: "flex-end" }}>
+                <Center>
+                  <ParaSm>Price</ParaSm>
+                </Center>
+                <Center style={{ gap: "0.1rem" }}>
+                  <Icon>
+                    <Image
+                      src="/assets/icons/ethereum.svg"
+                      width="18"
+                      height="18"
+                      alt="ETH"
+                    />
+                  </Icon>
+                  <Center>
+                    <ParaMid>100</ParaMid>
+                  </Center>
+                </Center>
+              </ChildContainer>
+            </NoAlignCenter>
           </Box>
         </RightSide>
       </Container>
