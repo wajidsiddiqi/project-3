@@ -27,11 +27,24 @@ import {
   Container,
   Box,
   ChildContainer,
-  NoAlignCenter,
+  BoxContainer,
   Icon,
+  Input,
 } from "@/app/styles/styles.js";
 
 export default function Home() {
+  const [mintQuantity, setMintQuantity] = useState(1);
+
+  const handleDecrement = () => {
+    if (mintQuantity <= 1) return;
+    setMintQuantity(mintQuantity - 1);
+  };
+
+  const handleIncrement = () => {
+    if (mintQuantity >= 15) return;
+    setMintQuantity(mintQuantity + 1);
+  };
+
   return (
     <React.Fragment>
       <Header />
@@ -46,6 +59,7 @@ export default function Home() {
             culpa eligendi ut voluptas molestiae et natus mollitia ex fugiat
             dolore eum magni necessitatibus.
           </ParaBig>
+          <StyledButton>View on Etherscan</StyledButton>
         </LeftSide>
         <RightSide>
           <Box>
@@ -53,11 +67,10 @@ export default function Home() {
               src="/assets/nfts/1.jpg"
               alt="NFT"
               style={ImageStyle}
-              width={0}
-              height={0}
-              layout="responsive"
+              width="350"
+              height="350"
             />
-            <NoAlignCenter>
+            <BoxContainer>
               <ChildContainer style={{ alignItems: "flex-start" }}>
                 <Center>
                   <ParaSm>Total Minted</ParaSm>
@@ -85,7 +98,39 @@ export default function Home() {
                   </Center>
                 </Center>
               </ChildContainer>
-            </NoAlignCenter>
+            </BoxContainer>
+
+            <BoxContainer>
+              <ChildContainer style={{ alignItems: "flex-start" }}>
+                <Center>
+                  <StyledButton>Mint Now</StyledButton>
+                </Center>
+              </ChildContainer>
+
+              <ChildContainer style={{ alignItems: "flex-end" }}>
+                <Center>
+                  <StyledButton
+                    style={{
+                      borderTopRightRadius: "0rem",
+                      borderBottomRightRadius: "0rem",
+                    }}
+                    onClick={handleDecrement}
+                  >
+                    -
+                  </StyledButton>
+                  <Input value={mintQuantity}></Input>
+                  <StyledButton
+                    style={{
+                      borderTopLeftRadius: "0rem",
+                      borderBottomLeftRadius: "0rem",
+                    }}
+                    onClick={handleIncrement}
+                  >
+                    +
+                  </StyledButton>
+                </Center>
+              </ChildContainer>
+            </BoxContainer>
           </Box>
         </RightSide>
       </Container>
