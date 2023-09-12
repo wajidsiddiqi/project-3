@@ -1,5 +1,6 @@
+"use client";
+import React from "react";
 import { ethers } from "ethers";
-import fs from "fs";
 import {
   usePrepareContractWrite,
   useContractWrite,
@@ -8,29 +9,25 @@ import {
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
 
-import { Price, Id } from "@/app/components/getterFuntions";
-
 import { StyledButton, StyledConnectButton } from "@/app/styles/styles.js";
+import Contract from "../KingKat.json";
 
-const jsonFilePath = "../KingKat.json";
-const jsonData = fs.readFileSync(jsonFilePath, "utf-8");
-const contractData = JSON.parse(jsonData);
-const contractAddress = contractData.address;
-const contractABI = contractData.abi;
-
-const { isConnected } = useAccount();
+const price = ethers.parseEther("0.01");
+const id = 1;
 
 export default function Mint({ quantity }) {
+  const { isConnected } = useAccount();
+
   const {
     config,
     error: prepareError,
     isError: isPrepareError,
   } = usePrepareContractWrite({
-    address: contractAddress,
-    abi: contractABI,
+    address: Contract.address,
+    abi: Contract.abi,
     functionName: "mint",
-    args: [Id, quantity],
-    value: (Price * quantity).toString(),
+    args: [id, quantity],
+    value: BigInt(price.toString()) * BigInt(quantity),
   });
 
   const { data, error, isError, write } = useContractWrite(config);
@@ -55,6 +52,9 @@ export default function Mint({ quantity }) {
           }}
         </ConnectKitButton.Custom>
       )}
+
+      {(isPrepareError || isError) &&
+        console.log(prepareError?.message || error?.message)}
     </React.Fragment>
   );
 }
