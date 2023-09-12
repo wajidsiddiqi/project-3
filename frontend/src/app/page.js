@@ -5,6 +5,8 @@ import Link from "next/link";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 // import ScrollToTopButton from "./components/ScrollToTopButton";
+// import { TotalSupply } from "./components/getterFuntions";
+import Mint from "./components/Mint";
 import {
   MainH1Title,
   ParaBig,
@@ -26,6 +28,7 @@ import {
 
 export default function Home() {
   const [mintQuantity, setMintQuantity] = useState(1);
+  // const [totalSupply, setTotalSupply] = useState(null);
 
   const handleDecrement = () => {
     if (mintQuantity <= 1) return;
@@ -36,6 +39,17 @@ export default function Home() {
     if (mintQuantity >= 15) return;
     setMintQuantity(mintQuantity + 1);
   };
+
+  /* useEffect(() => {
+    // Fetch the total supply when the component mounts
+    TotalSupply()
+      .then((result) => {
+        setTotalSupply(result);
+      })
+      .catch((error) => {
+        console.error("Error fetching total supply:", error);
+      });
+  }, []); // Empty dependency array to run once on mount*/
 
   return (
     <React.Fragment>
@@ -72,7 +86,12 @@ export default function Home() {
                   <ParaSm>Total Minted</ParaSm>
                 </Center>
                 <Center>
-                  <ParaMid>0 / 15</ParaMid>
+                  <ParaMid>
+                    {/* {totalSupply !== null
+                      ? `${totalSupply} / 15`
+                      : "Loading... / 15"} */}
+                    0 / 15
+                  </ParaMid>
                 </Center>
               </ChildContainer>
 
@@ -99,7 +118,7 @@ export default function Home() {
             <BoxContainer>
               <ChildContainer style={{ alignItems: "flex-start" }}>
                 <Center>
-                  <StyledButton>Mint Now</StyledButton>
+                  <Mint quantity={mintQuantity} />
                 </Center>
               </ChildContainer>
 
