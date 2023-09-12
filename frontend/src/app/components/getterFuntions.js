@@ -1,34 +1,25 @@
-import fs from "fs";
 import { readContracts } from "wagmi";
 import { ethers } from "ethers";
+import Contract from "../KingKat.json";
 
-const jsonFilePath = "../KingKat.json";
-const jsonData = fs.readFileSync(jsonFilePath, "utf-8");
-const contractData = JSON.parse(jsonData);
-const contractAddress = contractData.address;
-const contractABI = contractData.abi;
+const TotalSupply = async () => {
+  const getTotalSupply = await readContracts({
+    contracts: [
+      {
+        address: Contract.address,
+        abi: Contract.abi,
+        functionName: "totalSupply",
+        args: [1],
+      },
+    ],
+  });
 
-const getPrice = await readContracts({
-  contracts: [
-    {
-      address: contractAddress,
-      abi: contractABI,
-      functionName: "getPrice",
-    },
-  ],
-});
+  if (getTotalSupply[0].status === "success") {
+    return getTotalSupply[0].result.toString();
+  } else {
+    const error = getTotalSupply[0].error;
+    console.error("Error:", error);
+  }
+};
 
-const getId = await readContracts({
-  contracts: [
-    {
-      address: contractAddress,
-      abi: contractABI,
-      functionName: "getTokenAId",
-    },
-  ],
-});
-
-const Price = ethers.parseEther(getPrice).toString();
-const Id = getId;
-
-export { Price, Id };
+export { TotalSupply };
