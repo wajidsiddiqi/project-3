@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import EnlargeImage from "./components/EnlargeImage";
 // import ScrollToTopButton from "./components/ScrollToTopButton";
 // import { TotalSupply } from "./components/getterFuntions";
 import Mint from "./components/Mint";
 import {
+  MainPageWrapper,
   MainH1Title,
   ParaBig,
   ParaMid,
@@ -29,6 +31,7 @@ import {
 export default function Home() {
   const [mintQuantity, setMintQuantity] = useState(1);
   // const [totalSupply, setTotalSupply] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDecrement = () => {
     if (mintQuantity <= 1) return;
@@ -52,7 +55,7 @@ export default function Home() {
   }, []); // Empty dependency array to run once on mount*/
 
   return (
-    <React.Fragment>
+    <MainPageWrapper>
       <Header />
       <Container>
         <LeftSide>
@@ -71,15 +74,17 @@ export default function Home() {
         </LeftSide>
         <RightSide>
           <Box>
-            <ImageContainer>
+            <ImageContainer onClick={() => setIsOpen(true)}>
               <Image
                 src="/assets/nfts/1.jpg"
                 alt="NFT"
                 style={ImageStyle}
-                width="350"
-                height="350"
+                width={0}
+                height={0}
+                layout="responsive"
               />
             </ImageContainer>
+            <EnlargeImage isOpen={isOpen} setIsOpen={setIsOpen} />
             <BoxContainer>
               <ChildContainer style={{ alignItems: "flex-start" }}>
                 <Center>
@@ -109,7 +114,7 @@ export default function Home() {
                     />
                   </Icon>
                   <Center>
-                    <ParaMid>100</ParaMid>
+                    <ParaMid>0.01</ParaMid>
                   </Center>
                 </Center>
               </ChildContainer>
@@ -150,6 +155,6 @@ export default function Home() {
         </RightSide>
       </Container>
       <Footer />
-    </React.Fragment>
+    </MainPageWrapper>
   );
 }
