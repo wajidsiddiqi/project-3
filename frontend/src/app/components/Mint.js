@@ -54,7 +54,7 @@ export default function Mint({ quantity }) {
       )}
 
       {(isPrepareError || isError) &&
-        console.log(prepareError?.message || error?.message)}
+        console.log((prepareError || error)?.message)}
     </React.Fragment>
   );
 }
