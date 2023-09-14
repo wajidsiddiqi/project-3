@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import {
   usePrepareContractWrite,
@@ -9,7 +9,12 @@ import {
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
 
-import { StyledButton, StyledConnectButton } from "@/app/styles/styles.js";
+import {
+  StyledButton,
+  StyledConnectButton,
+  Modal,
+  ErrorContainer,
+} from "@/app/styles/styles.js";
 import Contract from "../KingKat.json";
 
 const price = ethers.parseEther("0.01");
@@ -17,6 +22,7 @@ const id = 1;
 
 export default function Mint({ quantity }) {
   const { isConnected } = useAccount();
+  const [isErrorSeen, setIsErrorSeen] = useState(false);
 
   const {
     config,
@@ -35,6 +41,12 @@ export default function Mint({ quantity }) {
     hash: data?.hash,
   });
 
+  useEffect(() => {
+    if (isPrepareError || isError) {
+      setIsErrorSeen(true);
+    }
+  }, [isPrepareError, isError]);
+
   return (
     <React.Fragment>
       {isConnected ? (
@@ -45,16 +57,19 @@ export default function Mint({ quantity }) {
         <ConnectKitButton.Custom>
           {({ show }) => {
             return (
-              <StyledConnectButton onClick={show}>
-                {isLoading ? "Minting..." : "Mint Now"}
-              </StyledConnectButton>
+              <StyledConnectButton onClick={show}>Mint Now</StyledConnectButton>
             );
           }}
         </ConnectKitButton.Custom>
       )}
 
-      {(isPrepareError || isError) &&
-        console.log((prepareError || error)?.message)}
+      {(isPrepareError || isError) && (
+        <Modal onClick={() => setIsErrorSeen(false)} isErrorSeen={isErrorSeen}>
+          <ErrorContainer isErrorSeen={isErrorSeen}>
+            {(prepareError || error)?.message}
+          </ErrorContainer>
+        </Modal>
+      )}
     </React.Fragment>
   );
 }
