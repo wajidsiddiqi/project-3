@@ -25,7 +25,8 @@ import {
   ChildContainer,
   BoxContainer,
   Icon,
-  Input,
+  QuantityBox,
+  BoxContainer_2,
 } from "@/app/styles/styles.js";
 
 export default function Home() {
@@ -75,14 +76,7 @@ export default function Home() {
         <RightSide>
           <Box>
             <ImageContainer onClick={() => setIsOpen(true)}>
-              <Image
-                src="/assets/nfts/1.jpg"
-                alt="NFT"
-                style={ImageStyle}
-                width={0}
-                height={0}
-                layout="responsive"
-              />
+              <img src="/assets/nfts/1.jpg" alt="NFT" style={ImageStyle} />
             </ImageContainer>
             <EnlargeImage isOpen={isOpen} setIsOpen={setIsOpen} />
             <BoxContainer>
@@ -120,14 +114,8 @@ export default function Home() {
               </ChildContainer>
             </BoxContainer>
 
-            <BoxContainer>
+            <BoxContainer_2>
               <ChildContainer style={{ alignItems: "flex-start" }}>
-                <Center>
-                  <Mint quantity={mintQuantity} />
-                </Center>
-              </ChildContainer>
-
-              <ChildContainer style={{ alignItems: "flex-end" }}>
                 <Center>
                   <StyledButton
                     style={{
@@ -138,7 +126,7 @@ export default function Home() {
                   >
                     -
                   </StyledButton>
-                  <Input value={mintQuantity}></Input>
+                  <QuantityBox>{mintQuantity}</QuantityBox>
                   <StyledButton
                     style={{
                       borderTopLeftRadius: "0rem",
@@ -150,7 +138,13 @@ export default function Home() {
                   </StyledButton>
                 </Center>
               </ChildContainer>
-            </BoxContainer>
+
+              <ChildContainer style={{ alignItems: "flex-end" }}>
+                <Center>
+                  <Mint quantity={mintQuantity} />
+                </Center>
+              </ChildContainer>
+            </BoxContainer_2>
           </Box>
         </RightSide>
       </Container>
