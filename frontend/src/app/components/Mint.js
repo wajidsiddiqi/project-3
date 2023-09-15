@@ -15,6 +15,8 @@ import {
   ErrorMsg,
   ErrorContainer,
   CloseIcon,
+  SuccessContainer,
+  SuccessMsg,
 } from "@/app/styles/styles.js";
 import Contract from "../KingKat.json";
 
@@ -24,6 +26,7 @@ const id = 1;
 export default function Mint({ quantity }) {
   const { isConnected } = useAccount();
   const [isErrorSeen, setIsErrorSeen] = useState(false);
+  const [isSucSeen, setIsSucSeen] = useState(false);
 
   const {
     config,
@@ -46,7 +49,11 @@ export default function Mint({ quantity }) {
     if (isPrepareError || isError) {
       setIsErrorSeen(true);
     }
-  }, [isPrepareError, isError]);
+
+    if (isSuccess) {
+      setIsSucSeen(true);
+    }
+  }, [isPrepareError, isError, isSuccess]);
 
   function handleError(error) {
     if (error) {
@@ -94,6 +101,29 @@ export default function Mint({ quantity }) {
               {handleError(prepareError || error)}
             </ErrorMsg>
           </ErrorContainer>
+        </Modal>
+      )}
+
+      {isSuccess && (
+        <Modal>
+          <SuccessContainer>
+            <SuccessMsg $isSucSeen={isSucSeen}>
+              <CloseIcon onClick={() => setIsSucSeen(false)}>X</CloseIcon>
+              Successfully minted your NFT!
+              <br />
+              View on{" "}
+              <a
+                href={`https://sepolia.etherscan.io/tx/${data?.hash}`}
+                target="_blank"
+                style={{
+                  textDecoration: "none",
+                  color: "#21325b",
+                }}
+              >
+                Etherscan
+              </a>
+            </SuccessMsg>
+          </SuccessContainer>
         </Modal>
       )}
     </React.Fragment>
