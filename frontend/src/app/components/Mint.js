@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import {
@@ -13,7 +12,9 @@ import {
   StyledButton,
   StyledConnectButton,
   Modal,
+  ErrorMsg,
   ErrorContainer,
+  CloseIcon,
 } from "@/app/styles/styles.js";
 import Contract from "../KingKat.json";
 
@@ -47,6 +48,28 @@ export default function Mint({ quantity }) {
     }
   }, [isPrepareError, isError]);
 
+  function handleError(error) {
+    if (error) {
+      const errorMsg = error?.message;
+      if (errorMsg.includes("InsufficientFundsError")) {
+        return "Insufficient funds to perform this operation.";
+      } else {
+        const errorLines = errorMsg.split("\n");
+        let output = "";
+        for (let i = 0; i < errorLines.length; i++) {
+          if (errorLines[i].startsWith("Contract Call")) {
+            break;
+          }
+          output += errorLines[i] + "\n";
+        }
+        return output;
+      }
+    } else {
+      console.error(error);
+      return "An error occurred while executing the contract function.";
+    }
+  }
+
   return (
     <React.Fragment>
       {isConnected ? (
@@ -63,10 +86,13 @@ export default function Mint({ quantity }) {
         </ConnectKitButton.Custom>
       )}
 
-      {(isPrepareError || isError) && (
-        <Modal onClick={() => setIsErrorSeen(false)} isErrorSeen={isErrorSeen}>
-          <ErrorContainer isErrorSeen={isErrorSeen}>
-            {(prepareError || error)?.message}
+      {(isPrepareError || isError) && isErrorSeen && (
+        <Modal>
+          <ErrorContainer>
+            <ErrorMsg $isErrorSeen={isErrorSeen}>
+              <CloseIcon onClick={() => setIsErrorSeen(false)}>X</CloseIcon>
+              {handleError(prepareError || error)}
+            </ErrorMsg>
           </ErrorContainer>
         </Modal>
       )}
