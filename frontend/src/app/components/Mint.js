@@ -7,6 +7,7 @@ import {
   useAccount,
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
+import Fade from "react-reveal/Fade";
 
 import {
   StyledButton,
@@ -96,10 +97,12 @@ export default function Mint({ quantity }) {
       {(isPrepareError || isError) && isErrorSeen && (
         <Modal>
           <ErrorContainer>
-            <ErrorMsg $isErrorSeen={isErrorSeen}>
-              <CloseIcon onClick={() => setIsErrorSeen(false)}>X</CloseIcon>
-              {handleError(prepareError || error)}
-            </ErrorMsg>
+            <Fade bottom>
+              <ErrorMsg $isErrorSeen={isErrorSeen}>
+                <CloseIcon onClick={() => setIsErrorSeen(false)}>X</CloseIcon>
+                {handleError(prepareError || error)}
+              </ErrorMsg>
+            </Fade>
           </ErrorContainer>
         </Modal>
       )}
@@ -107,22 +110,24 @@ export default function Mint({ quantity }) {
       {isSuccess && (
         <Modal>
           <SuccessContainer>
-            <SuccessMsg $isSucSeen={isSucSeen}>
-              <CloseIcon onClick={() => setIsSucSeen(false)}>X</CloseIcon>
-              Successfully minted your NFT!
-              <br />
-              View on{" "}
-              <a
-                href={`https://sepolia.etherscan.io/tx/${data?.hash}`}
-                target="_blank"
-                style={{
-                  textDecoration: "none",
-                  color: "#21325b",
-                }}
-              >
-                Etherscan
-              </a>
-            </SuccessMsg>
+            <Fade bottom>
+              <SuccessMsg $isSucSeen={isSucSeen}>
+                <CloseIcon onClick={() => setIsSucSeen(false)}>X</CloseIcon>
+                Successfully minted your NFT!
+                <br />
+                View on{" "}
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${data?.hash}`}
+                  target="_blank"
+                  style={{
+                    textDecoration: "none",
+                    color: "#21325b",
+                  }}
+                >
+                  Etherscan
+                </a>
+              </SuccessMsg>
+            </Fade>
           </SuccessContainer>
         </Modal>
       )}
