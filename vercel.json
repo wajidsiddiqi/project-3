@@ -1,4 +1,4 @@
 {
   "version": 2,
-  "builds": [{ "src": "frontend", "use": "@vercel/static" }]
+  "builds": [{ "src": "frontend/**", "use": "@vercel/node" }]
 }
