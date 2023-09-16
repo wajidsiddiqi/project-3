@@ -5,8 +5,7 @@ import Link from "next/link";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import EnlargeImage from "./components/EnlargeImage";
-// import ScrollToTopButton from "./components/ScrollToTopButton";
-// import { TotalSupply } from "./components/getterFuntions";
+import { TotalSupply } from "./components/getterFuntions";
 import Mint from "./components/Mint";
 import {
   MainPageWrapper,
@@ -31,7 +30,7 @@ import {
 
 export default function Home() {
   const [mintQuantity, setMintQuantity] = useState(1);
-  // const [totalSupply, setTotalSupply] = useState(null);
+  const [totalSupply, setTotalSupply] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDecrement = () => {
@@ -44,7 +43,7 @@ export default function Home() {
     setMintQuantity(mintQuantity + 1);
   };
 
-  /* useEffect(() => {
+  useEffect(() => {
     // Fetch the total supply when the component mounts
     TotalSupply()
       .then((result) => {
@@ -86,10 +85,9 @@ export default function Home() {
                 </Center>
                 <Center>
                   <ParaMid>
-                    {/* {totalSupply !== null
+                    {totalSupply !== null
                       ? `${totalSupply} / 15`
-                      : "Loading... / 15"} */}
-                    0 / 15
+                      : "Loading... / 15"}
                   </ParaMid>
                 </Center>
               </ChildContainer>
