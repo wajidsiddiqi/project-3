@@ -107,7 +107,7 @@ export default function Mint({ quantity }) {
         </Modal>
       )}
 
-      {isSuccess && (
+      {isSuccess && isSucSeen && (
         <Modal>
           <SuccessContainer>
             <Fade bottom>
