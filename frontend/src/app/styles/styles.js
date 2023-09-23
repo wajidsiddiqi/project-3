@@ -26,6 +26,10 @@ const MainPageWrapper = styled.div`
   flex-direction: column;
 `;
 
+const PageWrapperDark = styled(MainPageWrapper)`
+  background-color: ${DarkYellow};
+`;
+
 //!Heading Styles
 const MainH1Title = styled.h1`
   color: ${LightYellow};
@@ -380,4 +384,5 @@ export {
   CloseIcon,
   SuccessContainer,
   SuccessMsg,
+  PageWrapperDark,
 };
