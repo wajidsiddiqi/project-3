@@ -334,6 +334,7 @@ const CloseIcon = styled.div`
 const StyledFooter = styled(StyledNav)`
   border-top: ${LightYellow} solid 1px;
   border-bottom: ${LightYellow} solid 0px;
+  z-index: 0;
 `;
 
 const FooterPara = styled.p`
